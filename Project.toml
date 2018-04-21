@@ -1,0 +1,10 @@
+name = "Ledecka"
+desc = "Give your code a quickCheck before it gets off the chairlift. ⛷️ 🥇🥇"
+keywords = ["testing", "property based testing", "quickCheck", "memes", "arbitrary implementation"] 
+license = "BSD3"
+version = "1.2.3"
+authors = ["Polytomous! <polytomous@gmail.com>"]
+uuid = "9bc208b8-3aa8-11e8-19f7-8fdaaa57938d"
+
+[deps]
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
