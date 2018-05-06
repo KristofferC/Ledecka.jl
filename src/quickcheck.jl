@@ -131,11 +131,11 @@ end
 
 function quickCheck(property::Function)
     size = 1337
-    rand_seed = rand(RandomDevice(), 1:10000000)
-
+    
+    method_rng = MersenneTwister(round(Int64, time()*1000))
     results = Vector() 
     for (i, method) in enumerate(methods(property))
-        method_rng = MersenneTwister(rand_seed + i)
+        method_rng = MersenneTwister(round(Int64, time()*1000+ i))
         method_res = quickCheck(size, method_rng, property, method)
         append!(results, [method_res])
     end

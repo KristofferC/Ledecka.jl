@@ -125,7 +125,7 @@ in their own test code.
 """
 function arbitrary_saturation_law(::Type{ValueType}, iterations, threshold) where ValueType 
     # We want to define a basic function which binds the arbitrary
-    get_rand_seed = ()->rand(RandomDevice(),1:10000000000)
+    get_rand_seed = ()->round(Int64, time()*1000)
 
     function gen_arb_fn()
         size = ARBITRARY_LAW_DEFAULT_SIZE

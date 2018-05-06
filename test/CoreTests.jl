@@ -56,8 +56,6 @@ end
 
 Ledecka.arbitrary(::Type{IntegerLessThan{X}}) where X = (s,r)->IntegerLessThan{X}(choose(Integer, -1337:X)(s,r))
 
-println(arbitrary(IntegerLessThan{100})(1,RandomDevice()))
-
 function shrink(value::IntegerLessThan{X}) where X
     return IntegerLessThan{X}(shrink(value.value))  
 end
