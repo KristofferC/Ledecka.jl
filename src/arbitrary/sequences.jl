@@ -1,4 +1,3 @@
-
 function arbitrary(::Type{Vector{X}}) where X 
     function arg(size, rng)
         # Intentionally making this small because I don't have 
