@@ -8,4 +8,5 @@ include("arbitrary/union_tests.jl")
 
 
 include("PaperExample.jl")
+include("CheckersExample.jl")
 

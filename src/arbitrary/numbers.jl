@@ -63,3 +63,16 @@ function choose(::Type{X}, range) where X
 end
 
 arbitrary(::Type{Integer}) = (size, rng) -> Integer(choose(Integer, -1337:1337)(size,rng))
+
+struct IntegerIn{R}
+    value::Integer
+end
+
+export IntegerIn
+
+function arbitrary(::Type{IntegerIn{R}}) where R 
+    function arb(size, rng)
+        return IntegerIn{R}(choose(Integer, R)(size,rng))
+    end
+    arb
+end
