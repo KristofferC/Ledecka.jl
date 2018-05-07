@@ -62,4 +62,4 @@ function choose(::Type{X}, range) where X
     return (size_limit,rng)->rand(rng,range)
 end
 
-arbitrary(::Type{Integer}) = (size, rng) -> choose(Integer, -1337:1337)(size,rng)
+arbitrary(::Type{Integer}) = (size, rng) -> Integer(choose(Integer, -1337:1337)(size,rng))

@@ -7,3 +7,5 @@ include("arbitrary/struct_tests.jl")
 include("arbitrary/union_tests.jl")
 
 
+include("PaperExample.jl")
+
