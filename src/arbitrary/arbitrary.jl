@@ -140,4 +140,12 @@ function arbitrary_saturation_law(::Type{ValueType}, iterations, threshold) wher
     r!(result)
 end
 
+function just_an(arb::Function)
+    seed = round(Int64, time()*1000)
+    rng = MersenneTwister(seed)
+    return arb(seed,rng)
+end
+export just_an
+
+
 export arbitrary_saturation_law, arbitrary_saturation_law!, LawPassed, LawFailed, FailedSaturationLaw
