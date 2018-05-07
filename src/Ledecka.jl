@@ -6,5 +6,6 @@ include("arbitrary/numbers.jl")
 include("arbitrary/sequences.jl")
 include("arbitrary/unicode.jl")
 include("arbitrary/dictionaries.jl")
+include("arbitrary/structs.jl") 
 
 end # module
