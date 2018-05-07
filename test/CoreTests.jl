@@ -61,7 +61,7 @@ function shrink(value::IntegerLessThan{X}) where X
 end
 
 function some_property(x::IntegerLessThan{100})
-    if x.value >= 100
+    if x.value > 100
         return false 
     else
         return true
