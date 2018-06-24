@@ -16,7 +16,10 @@ function shrink(s::Integer)
         else
             upper = upper+1
         end
-       
+        
+        if length(upper:origin) == 0 
+            return origin
+        end
         return rand(rng, upper:origin)
     end
     cls
