@@ -12,3 +12,18 @@ function Ledecka.arbitrary(::Type{String})
     end
     arg
 end
+
+function Ledecka.shrink(s::String) 
+    function shr(size, rng)
+        if s == ""
+            return s
+        end
+        
+        len = length(s) 
+        shrink_size = choose(Integer, 0:Integer(floor(len/2)))(size,rng)
+        smaller_value = arbitrary(String)(shrink_size, rng)
+        smaller_value[1:shrink_size]
+    end
+    shr
+end
+

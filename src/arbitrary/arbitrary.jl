@@ -31,6 +31,9 @@ function arbitrary end
 
 
 
+function shrink end
+export shrink
+
 
 
 """
@@ -191,3 +194,10 @@ end
 export arbitrary_saturation_law, arbitrary_saturation_law!, LawPassed, LawFailed, FailedSaturationLaw
 export ArbitraryFailed, ArbitraryUndefined 
 export arbitrary, choose 
+
+arbitrary(::Type{Nothing}) = (size,rng) -> nothing
+shrink(::Nothing) = (size,rng) -> nothing
+
+arbitrary(::Type{Missing}) = (size, rng) -> missing
+shrink(::Missing) = (size, rng) -> missing
+

@@ -64,6 +64,9 @@ end
 
 arbitrary(::Type{Integer}) = (size, rng) -> Integer(choose(Integer, -1337:1337)(size,rng))
 
+arbitrary(::Type{Bool}) = (size, rng) -> arbitrary(Integer)(size,rng)%2 == 0 
+shrink(b::Bool) = (size,rng)-> false
+
 function arbitrary(::Type{Float64})
     function arb(size,rng)
         Float64(-1337+1337*2*rand(rng))

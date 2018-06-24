@@ -124,9 +124,6 @@ quickcheck_success(x::TestSuccess) = true
 quickcheck_success(x::ArbitraryFailed) = false
 
 
-
-
-
 # TODO: These printlns should be changed to the appropriate printing 
 # method or convention used so that we can optionally run tests silently
 function quickCheck(size, rand, func, property::Method, verbose=true)
@@ -140,8 +137,14 @@ function quickCheck(size, rand, func, property::Method, verbose=true)
     passes = 0 
     fails = 0 
     counterexamples = []
+    shrink_args= false
+    generated_args = []
     for i in 1:100
-        generated_args = generator(size,rand)
+        if shrink_args
+            generated_args = [shrink(arg)(size, rand) for arg in generated_args]
+        else
+            generated_args = generator(size,rand)
+        end
 
         # Evaluate the property 
         property_result = func(generated_args...) 
