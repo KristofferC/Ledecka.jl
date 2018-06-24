@@ -101,6 +101,12 @@ struct FailedSaturationLaw <: LawFailed
    failure_record 
 end
 
+function just_an(arb::Function)
+    seed = round(Int64, time()*1000)
+    rng = MersenneTwister(seed)
+    return arb(seed,rng)
+end
+export just_an
 
 """
 Implements the arbitrary saturation law. 
@@ -127,10 +133,19 @@ function arbitrary_saturation_law(::Type{ValueType}, iterations, threshold) wher
     # We want to define a basic function which binds the arbitrary
     get_rand_seed = ()->round(Int64, time()*1000)
 
+    arb_value = arbitrary(ValueType)
+
+    first_arb_result = just_an(arb_value)
+    if isa(first_arb_result, ArbitraryUndefined)
+        return FailedSaturationLaw(first_arb_result)     
+    end
+
+
+
     function gen_arb_fn()
         size = ARBITRARY_LAW_DEFAULT_SIZE
         rng = MersenneTwister(get_rand_seed())
-        () -> arbitrary(ValueType)(size, rng)
+        () -> arb_value(size, rng)
     end
 
     result = test_rng_saturation_for(gen_arb_fn, iterations, threshold)
@@ -140,12 +155,6 @@ function arbitrary_saturation_law(::Type{ValueType}, iterations, threshold) wher
     r!(result)
 end
 
-function just_an(arb::Function)
-    seed = round(Int64, time()*1000)
-    rng = MersenneTwister(seed)
-    return arb(seed,rng)
-end
-export just_an
 
 
 export arbitrary_saturation_law, arbitrary_saturation_law!, LawPassed, LawFailed, FailedSaturationLaw

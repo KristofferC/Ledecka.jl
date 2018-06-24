@@ -11,6 +11,10 @@ export union_types
 function arbitrary(s::Type{Union{X,Y}}) where {X,Y}
     arb_union_types = union_types(s) 
 
+    if length(arb_union_types) == 1
+        return ArbitraryUndefined(arb_union_types[1])
+    end
+
     candidate_union_arbitraries = []
     for t in arb_union_types 
         union_arb = arbitrary(t)

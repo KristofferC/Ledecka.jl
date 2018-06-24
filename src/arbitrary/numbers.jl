@@ -64,6 +64,13 @@ end
 
 arbitrary(::Type{Integer}) = (size, rng) -> Integer(choose(Integer, -1337:1337)(size,rng))
 
+function arbitrary(::Type{Float64})
+    function arb(size,rng)
+        Float64(-1337+1337*2*rand(rng))
+    end
+    arb
+end
+
 struct IntegerIn{R}
     value::Integer
 end
