@@ -1,33 +1,6 @@
-export choose, arbitrary, quickCheck
+export quickCheck
+
 export PropertyFailedResult, PropertyPassedResult, ConditionUnmet
-
-"""
-Produce a function mapping (size, rng) which produces 
-an instance of some type within a range. 
-The range can be interpreted for a very broad /range/ 
-of definitions. Lists, UnitRanges, StepRange are all 
-good explains. 
-"""
-function choose end 
-
-"""
-Produce a function mapping (size, rng) to an instance 
-of a supplied ValueType. Ideally satisfies the aribtrary 
-laws for a type-specific probability of repeating elements 
-to ensure that the data is morally random.
-
-`size` should constrain the instance to some appropriate
-measure of size. For example: Magnitude for a vector, 
-string length, absolute value for intengers, number of nodes 
-in a graph.... 
-
-`rng` should be a source of randomness that can be used with 
-calls to `rand(rng, ...)` For the most part this should be 
-expected to be a MersenneTwister or other seeded psuedo random 
-number generator. But you could easily imagine just using entropy 
-from the `RandomDevice` on a machine."""
-function arbitrary end 
-
 
 """
 Runs a series of random tests defined by arbitrary value types 
@@ -108,8 +81,7 @@ function generate_args(to_gen)
     for t in to_gen
         append!(all_arbitraries, [arbitrary(t)])
     end
-
-    if any(arb -> isa(arb, ArbitraryFailed), all_arbitraries)
+    if any(arb -> isa(arb,ArbitraryFailed), all_arbitraries)
         # If we failed to obtain an arbitrary, return the first 
         # failure for now. Consider changing to a wrapper type 
         # that also is an ArbitraryFailed for consumption 
@@ -140,11 +112,20 @@ function quickCheck(property::Function)
         append!(results, [method_res])
     end
 
-    if any(x->isa(x, TestFailure),results)
-        return FailedPropertiesResults([x for x in results if isa(x,TestFailure)], [x for x in results if !isa(x, TestFailure)]) 
+    if any(x->!quickcheck_success(x),results)
+        return FailedPropertiesResults([x for x in results if !quickcheck_success(x)],[x for x in results if quickcheck_success(x)]) 
     end
     return PassedPropertiesResults(results)
 end
+
+quickcheck_success(x::Bool) = x 
+quickcheck_success(x::TestFailure) = false
+quickcheck_success(x::TestSuccess) = true
+quickcheck_success(x::ArbitraryFailed) = false
+
+
+
+
 
 # TODO: These printlns should be changed to the appropriate printing 
 # method or convention used so that we can optionally run tests silently

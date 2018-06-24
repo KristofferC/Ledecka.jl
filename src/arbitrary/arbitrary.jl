@@ -1,6 +1,37 @@
-export ArbitraryFailed, ArbitraryUndefined 
 
 using Random
+
+"""
+Produce a function mapping (size, rng) which produces 
+an instance of some type within a range. 
+The range can be interpreted for a very broad /range/ 
+of definitions. Lists, UnitRanges, StepRange are all 
+good explains. 
+"""
+function choose end
+
+
+"""
+Produce a function mapping (size, rng) to an instance
+of a supplied ValueType. Ideally satisfies the aribtrary
+laws for a type-specific probability of repeating elements
+to ensure that the data is morally random.
+
+`size` should constrain the instance to some appropriate
+measure of size. For example: Magnitude for a vector,
+string length, absolute value for intengers, number of nodes
+in a graph....
+
+`rng` should be a source of randomness that can be used with
+calls to `rand(rng, ...)` For the most part this should be
+expected to be a MersenneTwister or other seeded psuedo random
+number generator. But you could easily imagine just using entropy
+from the `RandomDevice` on a machine."""
+function arbitrary end
+
+
+
+
 
 """
 Represents types of ways that a call to arbitrary() can fail. 
@@ -136,7 +167,7 @@ function arbitrary_saturation_law(::Type{ValueType}, iterations, threshold) wher
     arb_value = arbitrary(ValueType)
 
     first_arb_result = just_an(arb_value)
-    if isa(first_arb_result, ArbitraryUndefined)
+    if typeof(first_arb_result) <: ArbitraryFailed 
         return FailedSaturationLaw(first_arb_result)     
     end
 
@@ -158,3 +189,5 @@ end
 
 
 export arbitrary_saturation_law, arbitrary_saturation_law!, LawPassed, LawFailed, FailedSaturationLaw
+export ArbitraryFailed, ArbitraryUndefined 
+export arbitrary, choose 

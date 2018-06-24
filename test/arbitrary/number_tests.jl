@@ -8,7 +8,6 @@ using Ledecka
 result = arbitrary_saturation_law(Integer, 1337, 0.002)
 @test isa(result, LawPassed) 
 
-println("testing float")
 float_result = arbitrary_saturation_law(Float64, 1337, 0.05)
 @test isa(float_result, LawPassed)
 
