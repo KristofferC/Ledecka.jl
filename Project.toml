@@ -1,5 +1,5 @@
 name = "Ledecka"
-desc = "Give your code a quickCheck before it gets off the chairlift. ⛷️ 🥇🥇"
+desc = "Give your code a quickCheck before it gets off the chairlift. 🚡⛷️ "
 keywords = ["testing", "property based testing", "quickCheck", "memes", "arbitrary implementation"] 
 license = "BSD3"
 version = "1.2.3"
