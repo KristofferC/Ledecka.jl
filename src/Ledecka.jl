@@ -8,5 +8,6 @@ include("arbitrary/unicode.jl")
 include("arbitrary/dictionaries.jl")
 include("arbitrary/structs.jl") 
 include("arbitrary/unions.jl")
+include("arbitrary/tuples.jl")
 
 end # module

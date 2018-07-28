@@ -13,6 +13,7 @@ include("arbitrary/unicode_tests.jl")
 include("arbitrary/dictionary_tests.jl") 
 include("arbitrary/struct_tests.jl") 
 include("arbitrary/union_tests.jl")
+include("arbitrary/tuple_tests.jl")
 end
 
 @testset "Example Tests" begin
