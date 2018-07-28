@@ -65,14 +65,31 @@ function choose(::Type{X}, range) where X
     return (size_limit,rng)->rand(rng,range)
 end
 
-arbitrary(::Type{Integer}) = (size, rng) -> Integer(choose(Integer, -1337:1337)(size,rng))
+arbitrary(::Type{Integer}) = (size, rng) -> arbitrary(Int32)(size,rng)
+arbitrary(::Type{X}) where X<:Integer = (size, rng) -> X(choose(X, typemin(X):typemax(X))(size,rng))
 
 arbitrary(::Type{Bool}) = (size, rng) -> arbitrary(Integer)(size,rng)%2 == 0 
 shrink(b::Bool) = (size,rng)-> false
 
-function arbitrary(::Type{Float64})
+
+
+ledecka_typemin(::Type{Float64}) = Float64(-1e100) 
+ledecka_typemax(::Type{Float64}) = Float64(1e100)
+ledecka_typemin(::Type{Float32}) = Float32(-1e30)
+ledecka_typemax(::Type{Float32}) = Float32(1e30)
+ledecka_typemin(::Type{Float16}) = Float16(-64503)
+ledecka_typemax(::Type{Float16}) = Float16(64503)
+
+
+# Realistically we need to return NaN and other weird 
+# values more often. We can put that off for now. 
+# TODO: improve this 
+function arbitrary(::Type{X})where X<:AbstractFloat
     function arb(size,rng)
-        Float64(-1337+1337*2*rand(rng))
+        minimum = ledecka_typemin(X)
+        maximum = ledecka_typemax(X)
+        range = maximum - minimum 
+        X(minimum+range*rand(rng, X))
     end
     arb
 end
