@@ -1,3 +1,14 @@
+function empty_biased_choice(::Type{X},range) where X
+    function emc(size, rng)
+        empty_probability = 0.02
+        if arbitrary(Float32)(size,rng) < empty_probability
+            0 
+        else 
+          choose(X, range)(size,rng)
+        end
+    end
+end
+
 function Ledecka.arbitrary(::Type{Char})
     function arb(size, rng)
         attempts = 1000;
@@ -19,13 +30,16 @@ function Ledecka.arbitrary(::Type{Char})
 end
 
 
+
+
+
 Ledecka.arbitrary(::Type{AbstractString}) = Ledecka.arbitrary(String)
 # You know that feel when you could have written this code
 # at a higher abstraction to make it more elegant but you 
 # didn't and you really should? ... that's a feel I'm feeling.
 function Ledecka.arbitrary(::Type{String})
     function arg(size, rng) 
-        string_size = choose(Integer, 0:240)(size, rng)
+        string_size = empty_biased_choice(Integer, 0:240)(size, rng)
         s = "" 
         if string_size == 0 
             return s

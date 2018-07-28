@@ -4,10 +4,10 @@ using Test
 using Ledecka
 
 @testset "Basic unicode saturation tests" begin
-    result = arbitrary_saturation_law(String, 1000, 0.005)
+    result = arbitrary_saturation_law(String, 1000, 0.03)
     @test isa(result, LawPassed)
 
-    result = arbitrary_saturation_law(AbstractString, 1000, 0.005)
+    result = arbitrary_saturation_law(AbstractString, 1000, 0.03)
     @test isa(result, LawPassed)
 
     result = arbitrary_saturation_law(Char, 1000, 0.005)
