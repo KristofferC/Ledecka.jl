@@ -18,6 +18,8 @@ function Ledecka.arbitrary(::Type{Char})
     arb
 end
 
+
+Ledecka.arbitrary(::Type{AbstractString}) = Ledecka.arbitrary(String)
 # You know that feel when you could have written this code
 # at a higher abstraction to make it more elegant but you 
 # didn't and you really should? ... that's a feel I'm feeling.

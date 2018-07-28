@@ -7,6 +7,9 @@ using Ledecka
     result = arbitrary_saturation_law(String, 1000, 0.005)
     @test isa(result, LawPassed)
 
+    result = arbitrary_saturation_law(AbstractString, 1000, 0.005)
+    @test isa(result, LawPassed)
+
     result = arbitrary_saturation_law(Char, 1000, 0.005)
     @test isa(result, LawPassed)
 
