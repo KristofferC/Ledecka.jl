@@ -1,3 +1,23 @@
+function Ledecka.arbitrary(::Type{Char})
+    function arb(size, rng)
+        attempts = 1000;
+        for i in 0:attempts
+            char_index = arbitrary(UInt32)(size, rng)
+            try
+            ch = Char(char_index)
+            if isvalid(ch)
+                return ch
+            end
+            catch e 
+            end
+        end
+        # We didn't find a char in 1000 tries? 
+        # Press F to pay respects. 
+        return Char('F')
+    end
+    arb
+end
+
 # You know that feel when you could have written this code
 # at a higher abstraction to make it more elegant but you 
 # didn't and you really should? ... that's a feel I'm feeling.
