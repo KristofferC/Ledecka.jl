@@ -11,7 +11,7 @@ function choose_size(size_type, range)
 end
 
 
-function arbitrary (::Type{AbstractVector{X}}) where X
+function arbitrary(::Type{AbstractVector{X}}) where X
     arbitrary(Vector{X})
 end
 
