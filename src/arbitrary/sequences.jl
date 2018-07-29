@@ -10,6 +10,11 @@ function choose_size(size_type, range)
     arb
 end
 
+
+function arbitrary (::Type{AbstractVector{X}}) where X
+    arbitrary(Vector{X})
+end
+
 function arbitrary(::Type{Vector{X}}) where X 
     function arg(size, rng)
         # Intentionally making this small because I don't have 
