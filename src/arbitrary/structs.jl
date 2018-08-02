@@ -14,7 +14,6 @@
 # arbitrary_struct(s::X) which will do all of the reflection for
 # you and generate the appropriate arbitrary instance to return
 
-
 function arbitrary_struct(::Type{StructType}) where StructType
     
     field_arbitraries = Vector() 
@@ -49,5 +48,29 @@ function arbitrary_struct(::Type{StructType}) where StructType
     end
     arbs
 end
+
+function shrink_struct(x::X) where X
+    val = x
+    field_values = []
+    for field_name in fieldnames(X)
+        field_value = getfield(val, field_name) 
+        append!(field_values, [field_value])
+    end
+
+    function shr(size, rng)
+        constructor_values = []
+    
+        for field_value in field_values
+            shrunk_value = shrink(field_value)(size, rng)
+            append!(constructor_values, [shrunk_value])
+        end
+
+        return X(constructor_values...)
+    end
+    shr
+end
+export shrink_struct
+
+
 
 export arbitrary_struct

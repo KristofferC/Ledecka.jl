@@ -39,7 +39,7 @@ Ledecka.arbitrary(::Type{AbstractString}) = Ledecka.arbitrary(String)
 # didn't and you really should? ... that's a feel I'm feeling.
 function Ledecka.arbitrary(::Type{String})
     function arg(size, rng) 
-        string_size = empty_biased_choice(Integer, 0:240)(size, rng)
+        string_size = empty_biased_choice(Integer, 0:42)(size, rng)
         s = "" 
         if string_size == 0 
             return s
@@ -58,7 +58,11 @@ function Ledecka.shrink(s::String)
         len = length(s) 
         shrink_size = choose(Integer, 0:Integer(floor(len/2)))(size,rng)
         smaller_value = arbitrary(String)(shrink_size, rng)
-        smaller_value[1:shrink_size]
+        if length(smaller_value) < shrink_size
+            smaller_value
+        else
+            smaller_value[1:shrink_size]
+        end
     end
     shr
 end

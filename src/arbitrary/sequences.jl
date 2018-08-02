@@ -15,6 +15,7 @@ function arbitrary(::Type{AbstractVector{X}}) where X
     arbitrary(Vector{X})
 end
 
+
 function arbitrary(::Type{Vector{X}}) where X 
     function arg(size, rng)
         # Intentionally making this small because I don't have 
@@ -33,5 +34,31 @@ function arbitrary(::Type{Vector{X}}) where X
         return v
     end
     arg
+end
+
+function shrink(x::Vector{X}) where X
+    function shr(size, rng)
+        vect_length = length(x)
+
+        half_length = round(Integer, floor(vect_length/2))
+        new_length = choose(Integer, 0:half_length)(size,rng)
+        println("old $(vect_length) half $(half_length) new $(new_length)")
+
+        println("x $(length(x))")
+        println(x)
+        result = Vector{X}()
+        for val in x[1:new_length]
+            println("item")
+            println(val)
+            shrunk = shrink(val)(size,rng) 
+            println(shrunk)
+            append!(result, [shrunk]) 
+        end
+
+        println("result $(length(result))")
+        println(result)
+        result
+    end
+    shr
 end
 

@@ -1,6 +1,6 @@
 using Random
 
-function shrink(s::Integer)
+function shrink(s::X) where X <:Integer
     # Always shrink towards zero
     function cls(size, rng)
         if s == 0
@@ -16,10 +16,13 @@ function shrink(s::Integer)
         else
             upper = upper+1
         end
+
+        upper = round(X,floor(upper/2))
         
         if length(upper:origin) == 0 
             return origin
         end
+         
         return rand(rng, upper:origin)
     end
     cls

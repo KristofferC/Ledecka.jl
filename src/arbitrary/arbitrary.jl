@@ -32,6 +32,7 @@ function arbitrary end
 
 
 function shrink end
+#shrink(x::Any) = (size,rng)->x
 export shrink
 
 

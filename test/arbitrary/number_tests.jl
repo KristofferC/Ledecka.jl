@@ -25,7 +25,7 @@ float_result = arbitrary_saturation_law(Float16, 1337, 0.05)
 @test isa(float_result, LawPassed)
 
 test_value = just_an(arbitrary(Integer))
-for i in 0:1337
+for i in 0:50
     test_value = just_an(shrink(test_value))
 end
 @test test_value == 0 

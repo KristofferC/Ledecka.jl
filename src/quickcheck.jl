@@ -140,11 +140,7 @@ function quickCheck(size, rand, func, property::Method, verbose=true)
     shrink_args= false
     generated_args = []
     for i in 1:100
-        if shrink_args
-            generated_args = [shrink(arg)(size, rand) for arg in generated_args]
-        else
-            generated_args = generator(size,rand)
-        end
+        generated_args = generator(size,rand)
 
         # Evaluate the property 
         property_result = func(generated_args...) 
@@ -160,10 +156,31 @@ function quickCheck(size, rand, func, property::Method, verbose=true)
                 println("Failure for property $(property)")
             end
 
-            append!(counterexamples,[generated_args])
 
+            founds = 0 
+            shrunk_args = generated_args
+            result_args = generated_args
+
+            shrunk_property_result = property_result
+            result_property_result = property_result
+            # Shrink down the counterexample as small as we can
+            shrink_attempts = 10
+            for _ in 1:shrink_attempts
+                inner_args = [shrink(arg)(size,rand) for arg in shrunk_args]
+                property_result_inner = func(inner_args...) 
+                if !property_pass(property_result_inner) 
+                    founds = founds + 1
+                    shrunk_args = inner_args
+                    result_args = shrunk_args
+                    shrunk_property_result = property_result_inner
+                    result_property_result = shrunk_property_result
+                end
+            end
+
+            append!(counterexamples,[(result_args, result_property_result)])
             if fails <= 5
-                println("Counterexample: $(generated_args)")
+                println("Counterexample: $(result_args)")
+                println("Property result: $(result_property_result)")
             end
         end
     end
