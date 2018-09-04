@@ -2,6 +2,8 @@
 
 > Give your code a quickCheck before it gets off the         chairlift. ⛷️ 🥇🥇
 
+![A tram and a skier getting off of it to ride towards the name of the project](/docs/ledecka_logo.png)
+
 Ledecka.jl is a property-based testing library in the style of Haskell's quickCheck. Ledecka takes properties of a program,
 represented as methods with typed parameters, and tests that they are true for many randomized inputs.
 
