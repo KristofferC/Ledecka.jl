@@ -43,6 +43,14 @@ passes::Int
 counterexamples
 end
 
+function Base.show(io::IO, x::PropertyFailedResult) 
+    print(io,"❌(😭$(x.fails)|😊$(x.passes) $(x.method) CE: ")
+
+    top_counter = x.counterexamples[1:min(5, length(x.counterexamples))]
+
+    Base.show(io, top_counter)
+    print(io, ")")
+end
 
 export TestSuccess, PropertyPassedResult
 abstract type TestSuccess end
@@ -51,10 +59,18 @@ method
 passes::Int
 end 
 
+function Base.show(io::IO, x::PropertyPassedResult)
+    print(io, "✅")
+end
+
+
+
+
 export property_pass
 property_pass(s::Bool) = s 
 property_pass(::TestSuccess) = true 
 property_pass(::TestFailure) = false 
+property_pass(x::Any) = throw("property pass undefined for $(x)")
 
 
 export FailedPropertiesResults 
@@ -62,6 +78,15 @@ struct FailedPropertiesResults <:TestFailure
     failures
     passes
 end
+
+function Base.show(io::IO, x::FailedPropertiesResults)
+    print(io, "❌(😡 $(length(x.failures)) 🙂 $(length(x.passes)) Failures: ")
+    print(io,x.failures)
+    print(io, " Passes: ") 
+    print(io,x.passes)
+    print(io, ")")
+end
+
 export PassedPropertiesResults
 struct PassedPropertiesResults <: TestSuccess 
     passes
@@ -124,6 +149,15 @@ quickcheck_success(x::TestSuccess) = true
 quickcheck_success(x::ArbitraryFailed) = false
 
 
+
+
+mutable struct PropertyExceptionResult 
+    x
+    exception
+end
+
+Ledecka.property_pass(::PropertyExceptionResult) = false
+
 # TODO: These printlns should be changed to the appropriate printing 
 # method or convention used so that we can optionally run tests silently
 function quickCheck(size, rand, func, property::Method, verbose=true)
@@ -143,7 +177,11 @@ function quickCheck(size, rand, func, property::Method, verbose=true)
         generated_args = generator(size,rand)
 
         # Evaluate the property 
-        property_result = func(generated_args...) 
+        property_result = try 
+            func(generated_args...) 
+        catch ee
+            PropertyExceptionResult(generated_args, ee)
+        end
             
         if property_pass(property_result) 
             passes = passes + 1 
@@ -156,7 +194,6 @@ function quickCheck(size, rand, func, property::Method, verbose=true)
                 println("Failure for property $(property)")
             end
 
-
             founds = 0 
             shrunk_args = generated_args
             result_args = generated_args
@@ -167,7 +204,11 @@ function quickCheck(size, rand, func, property::Method, verbose=true)
             shrink_attempts = 10
             for _ in 1:shrink_attempts
                 inner_args = [shrink(arg)(size,rand) for arg in shrunk_args]
-                property_result_inner = func(inner_args...) 
+                property_result_inner = try 
+                    func(inner_args...) 
+                catch ee
+                    PropertyExceptionResult(inner_args, ee)
+                end
                 if !property_pass(property_result_inner) 
                     founds = founds + 1
                     shrunk_args = inner_args

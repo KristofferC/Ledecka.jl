@@ -53,7 +53,14 @@ function shrink_struct(x::X) where X
     val = x
     field_values = []
     for field_name in fieldnames(X)
-        field_value = getfield(val, field_name) 
+        field_value = try 
+            getfield(val, field_name) 
+        catch ee 
+            h!(ex::UndefRefError) = throw((ex, x, field_name, val))
+            h!(ex::Any) = throw(ex)
+            h!(ee)
+        end
+
         append!(field_values, [field_value])
     end
 

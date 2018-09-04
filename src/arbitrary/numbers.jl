@@ -28,6 +28,37 @@ function shrink(s::X) where X <:Integer
     cls
 end
 
+function shrink(s::X) where X <:AbstractFloat
+    # Always shrink towards zero
+    function cls(size, rng)
+        if s == 0
+            return s
+        end
+        
+        magnitude = abs(s) 
+        upper = s
+        origin = 0
+
+        if s > origin
+            upper = upper-1
+        else
+            upper = upper+1
+        end
+
+        upper = upper / 2
+
+        range = upper * 2
+        
+        if isapprox(range, 0) 
+            return origin
+        end
+         
+        minimum = -upper
+        return X(minimum+range*rand(rng, X))
+    end
+    cls
+end
+
 
 function constrain(s::Integer) 
     function cls(size,rng)
