@@ -25,7 +25,7 @@ add https://github.com/polytomous/Ledecka.jl#Kappa
 
 Using just the Julia repl: 
 1. Start a julia repl
-2. In the prompt, enter `using Pkg3`
+2. In the prompt, enter `using Pkg`
 3. Type the following and press enter: 
 ``` 
 pkg"add https://github.com/polytomous/Ledecka.jl#Kappa"
